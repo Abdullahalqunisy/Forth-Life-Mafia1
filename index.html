@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>Forth Life Mafia - Pager</title>
+<style>
+body {
+  margin:0;
+  font-family:'Courier New', monospace;
+  background: linear-gradient(135deg,#042b00,#050008);
+  color:#062e77;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+.container {
+  background: linear-gradient(180deg,#011400,#021f04);
+  padding:30px;
+  border-radius:20px;
+  width:400px;
+  box-shadow:0 0 50px rgba(2, 48, 12, 0.35);
+  border:2px solid #034201;
+}
+h1 { text-align:center; color:#062e77; letter-spacing:2px; margin-bottom:10px; }
+.note { text-align:center; font-size:14px; margin-bottom:20px; }
+textarea {
+  width:100%;
+  height:100px;
+  border-radius:10px;
+  border:2px solid #f8f8f8;
+  background:#034201;
+  color:#ffffff;
+  padding:10px;
+  font-size:18px;
+  resize:none;
+}
+.keypad {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:20px 0;
+}
+button {
+  padding:15px;
+  font-size:16px;
+  border-radius:10px;
+  border:none;
+  cursor:pointer;
+  background:#062e77;
+  color:#ffffff;
+}
+button:hover { background:#034201; }
+.transform-buttons { display:flex; gap:10px; margin-bottom:15px; }
+.output {
+  background: rgba(255,255,255,0.15);
+  padding:10px;
+  border-radius:10px;
+  min-height:40px;
+  font-size:18px;
+  word-wrap: break-word;
+}
+.copy-btn {
+  margin-top:10px;
+  background:#034201;
+  color:#ffffff;
+}
+.copy-btn:hover { background:#000000; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Forth Life Mafia</h1>
+<div class="note"> Forth Life </div>
+
+<textarea id="input" placeholder="أدخل الحروف أو الأرقام هنا..."></textarea>
+
+<div class="keypad">
+  <button onclick="addChar('1')">1</button>
+  <button onclick="addChar('2')">2</button>
+  <button onclick="addChar('3')">3</button>
+  <button onclick="addChar('4')">4</button>
+  <button onclick="addChar('5')">5</button>
+  <button onclick="addChar('6')">6</button>
+  <button onclick="addChar('7')">7</button>
+  <button onclick="addChar('8')">8</button>
+  <button onclick="addChar('9')">9</button>
+  <button onclick="addChar('-')">-</button>
+  <button onclick="addChar('0')">0</button>
+  <button onclick="addChar('+')">+</button>
+  <button onclick="addChar(' ')">مسافة</button>
+  <button onclick="clearInput()">مسح</button>
+</div>
+
+<div class="transform-buttons">
+  <button onclick="lettersToNumbers()">تحويل الحروف إلى أرقام</button>
+  <button onclick="numbersToLetters()">تحويل الأرقام إلى حروف</button>
+</div>
+
+<div class="output" id="output"></div>
+<button class="copy-btn" onclick="copyOutput()">نسخ الإخراج</button>
+</div>
+
+<script>
+// الأبجدية العربية 28 حرف مع الهاء في المكان الصحيح
+const letters = [
+"ا","ب","ت","ث","ج","ح","خ","د","ذ","ر","ز","س",
+"ش","ص","ض","ط","ظ","ع","غ","ف","ق","ك","ل","م",
+"ن","هـ","و","ي"
+];
+
+// صوت إنذار قصير عند التحويل
+const beep = new Audio('https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg');
+beep.volume = 3.0;
+function playBeep(times=2){
+  let count=0;
+  const interval=setInterval(()=>{
+    beep.currentTime=0;
+    beep.play();
+    count++;
+    if(count>=times) clearInterval(interval);
+  },300);
+}
+
+function addChar(char){ document.getElementById('input').value += char; }
+function clearInput(){ document.getElementById('input').value = ''; }
+
+// الحروف → أرقام مفصولة بـ - مع الحفاظ على المسافات
+function lettersToNumbers(){
+  const input = document.getElementById('input').value;
+  if(!input) return;
+  const words = input.split(' '); // كلمة بكلمة
+  let finalWords = words.map(word => {
+    let arr = [];
+    for(let char of word){
+      const index = letters.indexOf(char);
+      if(index!==-1) arr.push(index+1);
+    }
+    return arr.join('-');
+  });
+  document.getElementById('output').textContent = finalWords.join(' ');
+  playBeep(2);
+}
+
+// أرقام مفصولة بـ - أو مسافة → حروف مع الحفاظ على الفراغات
+function numbersToLetters(){
+  const input = document.getElementById('input').value.trim();
+  if(!input) return;
+
+  const words = input.split(/\s+/); // كلمات
+  let finalWords = words.map(word=>{
+    const nums = word.split('-');
+    let str='';
+    for(let n of nums){
+      const num = parseInt(n,10);
+      if(!isNaN(num) && num>=1 && num<=28){
+        str += letters[num-1];
+      }
+    }
+    return str;
+  });
+
+  document.getElementById('output').textContent = finalWords.join(' ');
+  playBeep(2);
+}
+
+// نسخ الإخراج
+function copyOutput(){
+  const output = document.getElementById('output');
+  navigator.clipboard.writeText(output.textContent)
+    .then(()=> alert('تم نسخ الشفره!'))
+    .catch(()=> alert('فشل النسخ'));
+}
+</script>
+</body>
+</html>
