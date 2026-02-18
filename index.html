@@ -2,13 +2,13 @@
 <html lang="ar" dir="ltr">
 <head>
 <meta charset="UTF-8">
-<title>Forth Life - Pager</title>
+<title>Fourth Life - Pager</title>
 <style>
 body {
   margin:0;
   font-family:'Courier New', monospace;
   background: linear-gradient(135deg,#042b00,#050008);
-  color:#085af1;
+  color:#09ffde;
   display:flex;
   justify-content:center;
   align-items:center;
@@ -29,7 +29,7 @@ textarea {
   height:100px;
   border-radius:10px;
   border:2px solid #f8f8f8;
-  background:#034201;
+  background:#022701;
   color:#ffffff;
   padding:10px;
   font-size:18px;
@@ -70,7 +70,7 @@ button:hover { background:#19ce13; }
 </head>
 <body>
 <div class="container">
-<h1>Forth Life </h1>
+<h1>Fourth Life </h1>
 <div class="note"> gmail: abood.mq2015@gmail.com 
     YouTube: @Abdullah-maq 
 </div>
@@ -103,14 +103,14 @@ button:hover { background:#19ce13; }
 </div>
 
 <script>
-// الأبجدية العربية 28 حرف مع الهاء في المكان الصحيح
+
 const letters = [
 "ا","ب","ت","ث","ج","ح","خ","د","ذ","ر","ز","س",
 "ش","ص","ض","ط","ظ","ع","غ","ف","ق","ك","ل","م",
 "ن","هـ","و","ي"
 ];
 
-// صوت إنذار قصير عند التحويل
+
 const beep = new Audio('https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg');
 beep.volume = 3.0;
 function playBeep(times=2){
@@ -126,11 +126,11 @@ function playBeep(times=2){
 function addChar(char){ document.getElementById('input').value += char; }
 function clearInput(){ document.getElementById('input').value = ''; }
 
-// الحروف → أرقام مفصولة بـ - مع الحفاظ على المسافات
+
 function lettersToNumbers(){
   const input = document.getElementById('input').value;
   if(!input) return;
-  const words = input.split(' '); // كلمة بكلمة
+  const words = input.split(' '); 
   let finalWords = words.map(word => {
     let arr = [];
     for(let char of word){
@@ -143,12 +143,12 @@ function lettersToNumbers(){
   playBeep(2);
 }
 
-// أرقام مفصولة بـ - أو مسافة → حروف مع الحفاظ على الفراغات
+
 function numbersToLetters(){
   const input = document.getElementById('input').value.trim();
   if(!input) return;
 
-  const words = input.split(/\s+/); // كلمات
+  const words = input.split(/\s+/); 
   let finalWords = words.map(word=>{
     const nums = word.split('-');
     let str='';
@@ -165,7 +165,7 @@ function numbersToLetters(){
   playBeep(2);
 }
 
-// نسخ الإخراج
+
 function copyOutput(){
   const output = document.getElementById('output');
   navigator.clipboard.writeText(output.textContent)
